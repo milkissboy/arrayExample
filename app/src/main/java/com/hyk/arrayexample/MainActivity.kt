@@ -29,6 +29,28 @@ class MainActivity : AppCompatActivity() {
         )
         // => [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
+        // number 내림차순
+        print(
+            name = "numberToIntArray descending : ",
+            char.map { it }.sortedDescending().toCharArray()
+        )
+        // => [9, 8, 7, 6, 5, 4, 3, 2, 1]
+        print(
+            name = "numberToIntArray descending str : ",
+            char.map { it }.sortedDescending().toCharArray().concatToString()
+        )
+        // => 987654321
+
+        // 문자열중 짝수 대문자, 홀수 소문자
+        val char1 = "Gave my all and more".toCharArray().mapIndexed { index, char ->
+            if(index % 2 == 0) {
+                char.uppercase()
+            } else {
+                char.lowercase()
+            }
+        }.joinToString("")
+        print(name = "upper, lower : ", char1)
+
         // 콤마 기준으로 split
         val char2 = "123,456,789"
         print(
@@ -46,6 +68,12 @@ class MainActivity : AppCompatActivity() {
             char3.toCharArray()
         )
         // => [가, 나, 다, 라, 마, 바, 사]
+
+        // CharArray to String 합치기
+        print(
+            name = "char merge : ",
+            char3.toCharArray().concatToString()
+        )
 
         // float 을 소수점 기준으로 나누기
         val char4: Float = 123.456.toFloat()
@@ -155,14 +183,61 @@ class MainActivity : AppCompatActivity() {
         print(name = "any even : ", numbers5.any { it % 2 == 0 }) // 짝수 가짐
         print(name = "any odd : ", numbers5.any { it % 2 != 0 }) // 홀수 가짐
         print(name = "find : ", numbers5.find { it == 4 })    // 4가 있음
-        print(name = "findLast : ", numbers5.findLast { it == 5 })
+        print(name = "find : ", numbers5.find { it == 5 })    // 5가 없음
 
-        print(name = "findLast : ", numbers5.findLast { it == 5 })
-        print(name = "findLast : ", numbers5.findLast { it == 5 })
-        print(name = "findLast : ", numbers5.findLast { it == 5 })
+        print(name = "min : ", numbers3.minOrNull())  // 배열내의 최소 1
+        print(name = "max : ", numbers3.maxOrNull())  // 배열내의 최대 9
 
-//        print(numbers5.find { it == 4 }) // 4 있음
-//        print(numbers5.find { it == 5 }) // 5 있음?
+
+        //print(name = "findLast : ", numbers5.findLast { it == 5 })
+
+        // 약수 구하기
+        val num = 12
+        val divisorSum = if (num in 0..100) {
+            IntArray(num) { it + 1 }.reduce { acc, i ->
+                if (num % i == 0) acc + i else acc
+            }
+        } else 0
+        // (12 % n == 0) n = 1, 2, 3, 4, 6, 12  >>> 28
+        print(name = "divisorSum : ", divisorSum)
+
+        // 배열 내에 모든 수 더하기
+        val numbers6 = intArrayOf(3, 2, 5, 1)
+        val allSum: ArrayList<Int> = ArrayList<Int>()
+        numbers6.forEachIndexed { index, first ->
+            numbers6.forEachIndexed { indexSec, second ->
+                // 자기자신 빼고 더하기
+                if (index != indexSec) {
+                    allSum.add(first + second)
+                }
+            }
+        }
+
+        d("+ index, original : ${allSum.toIntArray().joinToString()}")
+        //5, 8, 4, 5, 7, 3, 8, 7, 6, 4, 3, 6
+        d("+ index distinct : ${allSum.distinct()}") // 디스팅트, 중복제거
+        //[5, 8, 4, 7, 3, 6]
+        d("temp distinct : ${allSum.distinct().sorted()}") // 오름차순
+        //[3, 4, 5, 6, 7, 8]
+        d("temp distinct : ${allSum.distinct().sortedDescending()}") // 내림차순
+        //[8, 7, 6, 5, 4, 3]
+
+        // 배열내 range
+        val position1 = 1   // 1번째
+        val position2 = 4   // 4번째
+        val numbers7 = intArrayOf(2, 6, 4, 7, 1, 3, 5).slice(position1..position2).toIntArray()
+        print(name = "range ", numbers7)
+        // [6, 4, 7, 1]
+
+        // 스트링 정렬
+        var str = "YbcdDeafAg".toCharArray()
+        str = str.filter {
+            it.isLowerCase()
+        }.sorted().toCharArray() + str.filter {
+            it.isUpperCase()
+        }.sorted().toCharArray()
+        print(name = "string sort ", str.concatToString())
+        // abcdefgADY
 
         textView.text = result.toString()
     }
@@ -187,6 +262,9 @@ class MainActivity : AppCompatActivity() {
             }
             is Boolean -> {
                 res = args.toString()
+            }
+            is String -> {
+                res = args
             }
             else -> {
                 res = ""
